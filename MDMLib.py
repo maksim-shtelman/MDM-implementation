@@ -15,6 +15,7 @@ class MDM():
         self.kernel_type = kernel_type
         self.C = C
         self.epsilon = epsilon
+        self.iter = 0
 
     def fit(self, X, y):
         # Initializing
@@ -79,7 +80,6 @@ class MDM():
             ## updating alpha
             alpha[i1] = alpha[i1] - delta
             alpha[i2] = alpha[i2] + delta
-            ## /изменения
 
             # updating W
             self.w = self.calc_w(alpha, y, X)
@@ -88,13 +88,13 @@ class MDM():
             # checking convergence
             diff = np.abs(np.linalg.norm(w_prev)**2-np.linalg.norm(self.w)**2)
             if diff < self.epsilon*np.linalg.norm(w_prev)**2:
-                print(count)
+                self.iter = count
                 break
 
 
             if count >= self.max_iter:
                 print("Iteration number exceeded the max of %d iterations" % (self.max_iter))
-                print(diff)
+                #print(diff)
                 return
         # Computing final parameters
         self.b = self.calc_b(X, y, self.w)
@@ -103,7 +103,7 @@ class MDM():
         # Getting support vectors
         alpha_idx = np.where(alpha > 0)[0]
         support_vectors = X[alpha_idx, :]
-        print('Number of iterations: %i' % count)
+        #print('Number of iterations: %i' % count)
         return support_vectors, count
     def predict(self, X):
         return self.h(X, self.w, self.b)
